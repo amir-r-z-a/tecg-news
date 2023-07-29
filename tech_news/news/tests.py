@@ -11,6 +11,7 @@ class NewsTestCase(TestCase):
         News.objects.create(title="Apple new mack", text="here is apples new mack")
         News.objects.create(title="samsung new phone", text="here is samsung new phone")
         News.objects.create(title="xiaomi new phone", text="here is xiaomi new phone")
+        News.objects.create(title="sony new TV", text="here is sony new TV")
 
         Tag.objects.create(name="tech")
         Tag.objects.create(name="phone")
