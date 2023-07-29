@@ -4,8 +4,6 @@ from rest_framework.utils import json
 from .models import News, Tag
 
 
-# Create your tests here.
-
 class NewsTestCase(TestCase):
     def setUp(self):
         News.objects.create(title="Apple new mack", text="here is apples new mack")
