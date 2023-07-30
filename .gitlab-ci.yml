@@ -1,0 +1,9 @@
+stages:
+  -test
+
+  test:
+  stage: test
+  script:
+    - echo "testing"
+    - cd tech_news
+    - python manage.py test
