@@ -1,37 +1,18 @@
+stages:
+  - test
+
 variables:
-  # DJANGO_CONFIG: "test"
-  MYSQL_DATABASE: $MYSQL_DB
-  MYSQL_ROOT_PASSWORD: $MYSQL_PASS
-  MYSQL_USER: $MYSQL_USER
-  MYSQL_PASSWORD: $MYSQL_PASS
+  # Set up your environment variables here (e.g., DATABASE_URL, SECRET_KEY, etc.)
+  DJANGO_SETTINGS_MODULE: "your_project.settings.ci"
 
-# default:
-#   image: ubuntu:20.04
-
-#   services:
-#     - mysql:8.0
-
-#   before_script:
-#     - apt -y update
-#     - apt -y install apt-utils
-#     - apt -y install net-tools python3.8 python3-pip mysql-client libmysqlclient-dev
-#     - apt -y upgrade
-#     - pip3 install -r requirements.txt
-
-
-migrations:
-  stage: build
-  script:
-    - cd tech_news
-    - python3 manage.py makemigrations
-    # - python3 manage.py makemigrations myapp
-    - python3 manage.py migrate
-    - python3 manage.py check
-
-
-django-tests:
+test:
   stage: test
+  image: python:3.9
+  services:
+    - postgres:latest
+  before_script:
+    - pip install -r requirements.txt
+    - python manage.py makemigrations --check --dry-run
+    - python manage.py migrate --noinput
   script:
-    - echo "GRANT ALL on *.* to '${MYSQL_USER}';"| mysql -u root --password="${MYSQL_ROOT_PASSWORD}" -h mysql
-    - python3 manage.py test
-
+    - python manage.py test
