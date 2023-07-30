@@ -3,7 +3,7 @@ stages:
 
 variables:
   # Set up your environment variables here (e.g., DATABASE_URL, SECRET_KEY, etc.)
-  DJANGO_SETTINGS_MODULE: "your_project.settings.ci"
+  DJANGO_SETTINGS_MODULE: "tech_news.settings.py"
 
 test:
   stage: test
