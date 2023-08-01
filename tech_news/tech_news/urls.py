@@ -16,8 +16,26 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
+from rest_framework.schemas import get_schema_view
 
 urlpatterns = [
+    path('news-api', get_schema_view(
+        title="Tech-News",
+        description="API to take all available news",
+        version="1.0.0",
+        urlconf="news.urls"
+
+    ), name='tech-api'),
+
     path('admin/', admin.site.urls),
-    path('', include('news.urls'))
+
+
+    path('', include('news.urls')),
+
+
+    path('swagger-ui/', TemplateView.as_view(
+        template_name='swagger-ui.html',
+        extra_context={'schema_url': 'tech-api'}
+    ), name='swagger-ui'),
 ]
