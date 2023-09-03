@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +25,10 @@ SECRET_KEY = 'django-insecure-@^c+2vbz8-_+ocens_dyw!_7d479$rxztep@!)e^q=_vreio(j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '0.0.0.0'
+]
 
 # Application definition
 
@@ -75,11 +79,11 @@ WSGI_APPLICATION = 'tech_news.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'roshanProject',
-        'USER': 'roshanuser',
-        'PASSWORD': 'roshanpass',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ.get('DJANGO_DB_NAME'),
+        'USER': os.environ.get('DJANGO_DB_USER'),
+        'PASSWORD': os.environ.get('DJANGO_DB_PASSWORD'),
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 

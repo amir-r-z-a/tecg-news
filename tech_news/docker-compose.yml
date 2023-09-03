@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # Django web application
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_web
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - SECRET_KEY= django-insecure-@^c+2vbz8-_+ocens_dyw!_7d479$rxztep@!)e^q=_vreio(j
+      - DJANGO_DB_HOST=db
+      - DJANGO_DB_PORT=5432
+      - DJANGO_DB_NAME=postgres
+      - DJANGO_DB_USER=postgres
+      - DJANGO_DB_PASSWORD=postgres
+    depends_on:
+      - db
+#      - redis
+
+    networks:
+      - test
+
+  # PostgreSQL database
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - test
+
+#  # Redis server
+#  redis:
+#    image: redis:latest
+#    container_name: redis_server
+#    ports:
+#      - "6377:6377"
+
+  # Celery worker
+  worker:
+    image: django:latest
+    container_name: celery_worker
+    command: python -m celery -A tech_news worker -l info
+    volumes:
+      - ./app:/app
+    depends_on:
+      - web
+    networks:
+      - test
+
+  # Celery beat (scheduler)
+  beat:
+    image: django:latest
+    container_name: celery_beat
+    command: python -m celery -A tech_news beat -l info
+    volumes:
+      - ./app:/app
+    depends_on:
+      - web
+    networks:
+      - test
+
+volumes:
+  postgres_data:
+
+networks:
+  test:
+    driver: bridge
